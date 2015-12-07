@@ -16,6 +16,8 @@ static void update_ui() {
   strftime(s_buffer, sizeof(s_buffer), clock_is_24h_style() ? "%H:%M" : "%I:%M", tick_time);
 
   text_layer_set_text(text_layer_time, s_buffer);
+
+  window_set_background_color(window, GColorFromHEX(0xff0000));
 }
 
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
@@ -40,6 +42,9 @@ static void window_load(Window *window) {
 
   text_layer_set_text_alignment(text_layer_time, GTextAlignmentCenter);
   text_layer_set_text_alignment(text_layer_rgb, GTextAlignmentCenter);
+
+  text_layer_set_background_color(text_layer_time, GColorClear);
+  text_layer_set_background_color(text_layer_rgb, GColorClear);
 
   layer_add_child(window_layer, text_layer_get_layer(text_layer_time));
   layer_add_child(window_layer, text_layer_get_layer(text_layer_rgb));
