@@ -1,0 +1,18 @@
+{
+  "uuid": "d8837755-e0a7-4f64-9456-f3a4682b83fa",
+  "shortName": "whatcolorisit",
+  "longName": "whatcolorisit",
+  "companyName": "vanita5",
+  "versionLabel": "1.0",
+  "sdkVersion": "3",
+  "targetPlatforms": ["aplite", "basalt", "chalk"],
+  "watchapp": {
+    "watchface": true
+  },
+  "appKeys": {
+    "dummy": 0
+  },
+  "resources": {
+    "media": []
+  }
+}
