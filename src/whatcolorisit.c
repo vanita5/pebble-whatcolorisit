@@ -1,6 +1,10 @@
 #include <pebble.h>
 
 static Window *window;
+
+static GFont custom_font_20;
+static GFont custom_font_38;
+
 static TextLayer *text_layer_time;
 static TextLayer *text_layer_rgb;
 
@@ -28,8 +32,11 @@ static void window_load(Window *window) {
   text_layer_set_text(text_layer_time, "00:00");
   text_layer_set_text(text_layer_rgb, "#FFFFFF");
 
-  text_layer_set_font(text_layer_time, fonts_get_system_font(FONT_KEY_BITHAM_42_BOLD));
-  text_layer_set_font(text_layer_rgb, fonts_get_system_font(FONT_KEY_GOTHIC_24));
+  custom_font_38 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_HACK_38));
+  custom_font_20 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_HACK_20));
+
+  text_layer_set_font(text_layer_time, custom_font_38);
+  text_layer_set_font(text_layer_rgb, custom_font_20);
 
   text_layer_set_text_alignment(text_layer_time, GTextAlignmentCenter);
   text_layer_set_text_alignment(text_layer_rgb, GTextAlignmentCenter);
@@ -39,6 +46,8 @@ static void window_load(Window *window) {
 }
 
 static void window_unload(Window *window) {
+  fonts_unload_custom_font(custom_font_20);
+
   text_layer_destroy(text_layer_time);
   text_layer_destroy(text_layer_rgb);
 }
