@@ -4,6 +4,20 @@ static Window *window;
 static TextLayer *text_layer_time;
 static TextLayer *text_layer_rgb;
 
+static void update_ui() {
+  time_t temp = time(NULL);
+  struct tm *tick_time = localtime(&temp);
+
+  static char s_buffer[8];
+  strftime(s_buffer, sizeof(s_buffer), clock_is_24h_style() ? "%H:%M" : "%I:%M", tick_time);
+
+  text_layer_set_text(text_layer_time, s_buffer);
+}
+
+static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
+  update_ui();
+}
+
 static void window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
@@ -37,6 +51,9 @@ static void init(void) {
   });
   const bool animated = true;
   window_stack_push(window, animated);
+
+  update_ui();
+  tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
 }
 
 static void deinit(void) {
