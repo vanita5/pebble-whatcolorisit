@@ -8,6 +8,10 @@ static GFont custom_font_38;
 static TextLayer *text_layer_time;
 static TextLayer *text_layer_rgb;
 
+static unsigned long getRGB(int r, int g, int b) {
+  return ((r & 0xff) << 16) + ((g & 0xff) << 8) + (b & 0xff);
+}
+
 static void update_ui() {
   time_t temp = time(NULL);
   struct tm *tick_time = localtime(&temp);
@@ -15,9 +19,22 @@ static void update_ui() {
   static char s_buffer[8];
   strftime(s_buffer, sizeof(s_buffer), clock_is_24h_style() ? "%H:%M" : "%I:%M", tick_time);
 
-  text_layer_set_text(text_layer_time, s_buffer);
+  int r = (int)(255 * (tick_time->tm_hour / 23.0));
+  int g = (int)(255 * (tick_time->tm_min / 59.0));
+  int b = (int)(255 * (tick_time->tm_sec / 59.0));
 
-  window_set_background_color(window, GColorFromHEX(0xff0000));
+  unsigned long hex = getRGB(r, g, b);
+
+  static char s_hex_buffer[16];
+  snprintf(s_hex_buffer, sizeof(s_hex_buffer), "#%02X%02X%02X", r, g, b);
+
+  text_layer_set_text(text_layer_time, s_buffer);
+  text_layer_set_text(text_layer_rgb, s_hex_buffer);
+
+  //text_layer_set_text_color(text_layer_time, GColorWhite);
+  //text_layer_set_text_color(text_layer_rgb, GColorWhite);
+
+  window_set_background_color(window, GColorFromHEX(hex));
 }
 
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
@@ -67,7 +84,7 @@ static void init(void) {
   window_stack_push(window, animated);
 
   update_ui();
-  tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
+  tick_timer_service_subscribe(SECOND_UNIT, tick_handler);
 }
 
 static void deinit(void) {
