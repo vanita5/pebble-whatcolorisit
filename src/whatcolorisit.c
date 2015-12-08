@@ -31,8 +31,10 @@ static void update_ui() {
   text_layer_set_text(text_layer_time, s_buffer);
   text_layer_set_text(text_layer_rgb, s_hex_buffer);
 
-  //text_layer_set_text_color(text_layer_time, GColorWhite);
-  //text_layer_set_text_color(text_layer_rgb, GColorWhite);
+  bool text_color_white = (r + g + b) / 3 <= 64;
+
+  text_layer_set_text_color(text_layer_time, text_color_white ? GColorWhite : GColorBlack);
+  text_layer_set_text_color(text_layer_rgb, text_color_white ? GColorWhite : GColorBlack);
 
   window_set_background_color(window, GColorFromHEX(hex));
 }
